@@ -1,8 +1,5 @@
-version: "3.8"
-
 services:
   mysql:
-    user: "${UID}:${GID}" 
     image: mysql:5.7
     container_name: mysql
     environment:
@@ -17,12 +14,13 @@ services:
       - twotier
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 60s
+      start_period: 15s
 
   flask-app:
+    user: "${UID}:${GID}"
     image: trainwithshubham/two-tier-flask-app:latest
     container_name: flask-app
     ports:
@@ -33,16 +31,17 @@ services:
       MYSQL_PASSWORD: root
       MYSQL_DB: devops
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - twotier
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 10s
 
 networks:
   twotier:
