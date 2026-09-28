@@ -21,7 +21,7 @@ services:
 
   flask-app:
     user: "${UID}:${GID}"
-  #  build: .
+   build: .
     image: snehasishp123/two-tier-flask-app:latest
     container_name: flask-app
     ports:
