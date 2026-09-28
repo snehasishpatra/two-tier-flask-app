@@ -1,11 +1,9 @@
-
+version: "3.8"
 
 services:
   mysql:
-    image: mysql:latest
-    user: "root"
-   # user: "${UID}:${GID}" 
-    #image: mysql:5.7
+    user: "${UID}:${GID}" 
+    image: mysql:5.7
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -35,8 +33,7 @@ services:
       MYSQL_PASSWORD: root
       MYSQL_DB: devops
     depends_on:
-      mysql:
-        condition: service_healthy  # <-- THIS FORCES COMPOSE TO WAIT
+      - mysql
     networks:
       - twotier
     restart: always
