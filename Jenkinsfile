@@ -1,5 +1,5 @@
 pipeline {
-    agent {label "dev"};
+    agent { label "dev" }
     stages {
         stage("code") {
             steps {
@@ -8,7 +8,6 @@ pipeline {
         }
         stage("build") {
             steps {
-                // Keep it named 'my-app' here
                 sh "docker build -t my-app:latest ." 
             }
         }
@@ -17,7 +16,6 @@ pipeline {
                 echo "code test"
             }
         }
-        
         stage("push to docker hub") {
             steps {
                 withCredentials([usernamePassword(
@@ -25,38 +23,35 @@ pipeline {
                     passwordVariable: "dockerHubPass",
                     usernameVariable: "dockerHubUser"
                 )]) {
-                  
                     sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-
-                    
-                    // FIXED: References 'my-app:latest' and tags it correctly with ':latest' for the target repo
                     sh "docker image tag my-app:latest \$dockerHubUser/two-tier-flask-app:latest"
-                    
                     sh "docker push \$dockerHubUser/two-tier-flask-app:latest"
                 }
             }
         }
         stage('deploy') {
             steps {
-                sh "UID=\$(id -u) GID=\$(id -g) docker compose up -d --build --force-recreate flask-app"
+                // FIXED: Wrapped in single quotes to pass variables cleanly to bash
+                sh 'UID=$(id -u) GID=$(id -g) docker compose up -d --build --force-recreate flask-app'
             }
         }
     }
     post {
         success {
-            emailtext body: "build sucessfull",
-            subject: "good news: your build is sucessfull",
-                to: "snehasishpatra932@gmail.com",
-            
-            
+            // FIXED: Standardized formatting and corrected typos in "successful"
+            emailtext(
+                body: "good news: your build is successful",
+                subject: "build successful",
+                to: "snehasishpatra932@gmail.com"
+            )
         }
-         failure {
-            emailtext
-                body: "build failed",
-            subject: "bad news: your build is failed",
-                to: "snehasishpatra932@gmail.com",
-                    }
-            
+        failure {
+            // FIXED: Added missing parentheses around parameters
+            emailtext(
+                body: "bad news: your build is failed",
+                subject: "build failed",
+                to: "snehasishpatra932@gmail.com"
+            )
         }
     }
 }
