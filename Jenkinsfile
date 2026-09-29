@@ -42,4 +42,22 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            emailtext(
+                subject: "build sucessfull",
+            body: "good news: your build is sucessfull",
+                to: "snehasishpatra932@gmail.com",
+            )
+            
+        }
+         failure {
+            emailtext(
+                subject: "build failed",
+            body: "bad news: your build is failed",
+                to: "snehasishpatra932@gmail.com",
+            )
+            
+        }
+    }
 }
