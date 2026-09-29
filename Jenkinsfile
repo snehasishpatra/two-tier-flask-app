@@ -39,7 +39,7 @@ pipeline {
     post {
         success {
             // FIXED: Standardized formatting and corrected typos in "successful"
-            emailtext(
+            emailext(
                 body: "good news: your build is successful",
                 subject: "build successful",
                 to: "snehasishpatra932@gmail.com"
@@ -47,7 +47,7 @@ pipeline {
         }
         failure {
             // FIXED: Added missing parentheses around parameters
-            emailtext(
+            emailext(
                 body: "bad news: your build is failed",
                 subject: "build failed",
                 to: "snehasishpatra932@gmail.com"
