@@ -56,8 +56,6 @@ pipeline {
             subject: "bad news: your build is failed",
                 to: "snehasishpatra932@gmail.com",
                     }
-    }
-}
             
         }
     }
